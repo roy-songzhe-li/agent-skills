@@ -204,6 +204,35 @@
 
 ---
 
+## Test Gaps
+
+> **Test Gap:** The new `createCheckoutLink` function lacks unit tests for token expiry validation. Perhaps we could add test cases for expired tokens and invalid signatures?
+
+**为什么好：**
+- 识别缺失的测试覆盖
+- 指出具体的测试场景（expiry, invalid signature）
+- 使用 tentative language
+
+---
+
+> **Test Gap:** The error path when `billingCheckoutSigningSecret` is missing isn't covered by tests. Would it make sense to add a test that verifies the error message?
+
+**为什么好：**
+- 识别错误路径没有测试
+- 建议验证错误信息
+- 使用问句形式
+
+---
+
+> **Test Gap:** This adds a new database migration but I don't see corresponding tests for the schema changes. Could we add tests to verify the new columns and constraints?
+
+**为什么好：**
+- 识别数据库迁移缺少测试
+- 说明应该测试什么（columns, constraints）
+- 礼貌建议
+
+---
+
 ## Positive Feedback
 
 > **Excellent:** Love the use of `timingSafeEqual` for constant-time comparison. Great security practice! 🔒

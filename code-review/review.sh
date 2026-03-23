@@ -69,6 +69,17 @@ fi
 
 echo -e "${GREEN}✓ Fetched $(wc -l < "${DIFF_FILE}") lines of diff${NC}"
 
+# Read project architecture rules from AGENTS.md
+echo -e "${YELLOW}⟳ Reading project architecture rules...${NC}"
+AGENTS_FILE="${TEMP_DIR}/AGENTS.md"
+gh api "/repos/${REPO}/contents/AGENTS.md" --jq '.content' 2>/dev/null | base64 -d > "${AGENTS_FILE}" || echo "" > "${AGENTS_FILE}"
+
+if [[ -s "${AGENTS_FILE}" ]]; then
+  echo -e "${GREEN}✓ Found AGENTS.md with $(wc -l < "${AGENTS_FILE}") lines${NC}"
+else
+  echo -e "${YELLOW}⊘ No AGENTS.md found, using general best practices${NC}"
+fi
+
 # Check if there are already comments to avoid duplicates
 echo -e "${YELLOW}⟳ Checking existing review comments...${NC}"
 EXISTING_COMMENTS=$(gh api "/repos/${REPO}/pulls/${PR_NUMBER}/comments" --jq '.[].body' 2>/dev/null || echo "")
@@ -82,8 +93,17 @@ if [[ ! -f "${PROMPT_TEMPLATE}" ]]; then
   exit 1
 fi
 
-# Replace {DIFF_CONTENT} with actual diff
-sed "s|{DIFF_CONTENT}|$(cat "${DIFF_FILE}")|g" "${PROMPT_TEMPLATE}" > "${PROMPT_FILE}"
+# Read AGENTS.md content
+AGENTS_RULES="No project-specific architecture rules found."
+if [[ -s "${AGENTS_FILE}" ]]; then
+  AGENTS_RULES=$(cat "${AGENTS_FILE}")
+fi
+
+# Replace placeholders
+cat "${PROMPT_TEMPLATE}" | \
+  sed "s|{AGENTS_RULES}|${AGENTS_RULES}|g" | \
+  sed "s|{DIFF_CONTENT}|$(cat "${DIFF_FILE}")|g" \
+  > "${PROMPT_FILE}"
 
 # Call LLM API
 echo -e "${YELLOW}⟳ Analyzing code with LLM...${NC}"

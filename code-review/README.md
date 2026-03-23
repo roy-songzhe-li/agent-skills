@@ -15,20 +15,23 @@ bash review.sh owner/repo 123 --dry-run
 ## Features
 
 - ✅ Pull GitHub PR diffs and analyze line-by-line
+- ✅ Read project architecture rules from AGENTS.md
 - ✅ Generate concise, clear review comments with tentative language
 - ✅ Post inline comments directly to the code
 - ✅ Support Approve / Request Changes / Comment review states
-- ✅ Auto-detect violations of 36 architecture rules
+- ✅ Identify test gaps and missing coverage
 - ✅ Avoid duplicate comments
 - ✅ LLM-powered analysis
 
 ## Documentation
 
 - **[SKILL.md](SKILL.md)** - Complete skill guide
-- **[architecture-rules.md](architecture-rules.md)** - 36 architecture rules checklist
 - **[review-prompt.txt](review-prompt.txt)** - LLM prompt template
+- **[architecture-rules-example.md](architecture-rules-example.md)** - Example architecture rules (for reference)
 - **[examples/good-comments.md](examples/good-comments.md)** - Examples of excellent review comments
 - **[examples/bad-comments.md](examples/bad-comments.md)** - Examples of bad review comments to avoid
+
+**Note:** The skill reads architecture rules from the project's `AGENTS.md` file, not from the example file.
 
 ## Requirements
 

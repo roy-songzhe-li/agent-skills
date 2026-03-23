@@ -55,14 +55,27 @@ Skill 会自动：
 gh pr diff <pr-number> --repo <owner/repo>
 ```
 
-### 2. 逐行审查
+### 2. 读取项目架构规则
+
+从项目的 `AGENTS.md` 文件读取架构规则和最佳实践：
+
+```bash
+# Clone repo 并读取 AGENTS.md
+gh repo clone <owner/repo> /tmp/repo
+cat /tmp/repo/AGENTS.md
+```
+
+如果项目没有 `AGENTS.md`，使用通用的代码审查最佳实践。
+
+### 3. 逐行审查
 
 对每个文件的每个改动：
-- 检查是否违反架构规则（见 `architecture-rules.md`）
+- 检查是否违反项目 AGENTS.md 中的架构规则
 - 识别潜在 bug
 - 发现代码改进机会
+- 识别测试覆盖缺口（test gaps）
 
-### 3. 生成 Comment
+### 4. 生成 Comment
 
 **格式要求：**
 - **一句话**：Concise, clear
@@ -86,9 +99,10 @@ gh pr diff <pr-number> --repo <owner/repo>
 - `Architecture: ...`
 - `Type Safety: ...`
 - `Performance: ...`
+- `Test Gap: ...` - 缺失的测试覆盖
 - `[NITPICK]` - 可选的微小改进
 
-### 4. Post Inline Comments
+### 5. Post Inline Comments
 
 使用 GitHub API：
 
@@ -105,7 +119,7 @@ gh api \
   -F 'comments[][body]=Perhaps we could simplify this logic?'
 ```
 
-### 5. 提交 Review
+### 6. 提交 Review
 
 根据发现的问题严重程度：
 
@@ -143,6 +157,8 @@ gh api \
 
 > **Type Safety:** Might be worth using `Type.Integer()` instead of `Type.Number()` since fractional days would produce incorrect expiry times.
 
+> **Test Gap:** The new `createCheckoutLink` function lacks unit tests for token expiry validation. Perhaps we could add test cases for expired tokens and invalid signatures?
+
 ### ❌ Bad Examples
 
 > ❌ This is redundant. Remove it.
@@ -153,15 +169,18 @@ gh api \
 
 ## Architecture Rules
 
-所有架构规则定义在 `architecture-rules.md`。
+架构规则从项目的 `AGENTS.md` 文件读取。每个项目可能有自己的架构规范和最佳实践。
 
-**重点检查：**
-1. 安全问题（使用 `getDb()` 绕过 RLS）
-2. 架构分层（缺少 repository layer）
-3. 类型安全（TypeBox vs SDK 原生类型）
-4. API 设计（路径参数 vs body 参数）
-5. 组件规范（Design System vs 原生 HTML）
-6. 错误处理（全局 error boundary vs 手动处理）
+**如果项目有 AGENTS.md，遵循其中的规则。**
+
+**通用检查项：**
+1. 安全问题（认证、授权、数据泄露）
+2. 架构分层（route → service → repository → database）
+3. 类型安全（避免 `any`，使用类型验证）
+4. API 设计（RESTful 语义，幂等性）
+5. 代码冗余（DRY 原则）
+6. 测试覆盖（test gaps）
+7. 错误处理（统一的错误处理机制）
 
 ## Advanced Usage
 
@@ -229,10 +248,12 @@ Review 时会参考 `AGENTS.md` 里的规则（如果存在）：
 
 - `SKILL.md` - 本文档
 - `review.sh` - 主要 review 脚本
-- `architecture-rules.md` - 架构规则清单
 - `review-prompt.txt` - LLM review prompt 模板
+- `architecture-rules-example.md` - 架构规则示例（仅供参考）
 - `examples/good-comments.md` - 优秀 comment 示例
 - `examples/bad-comments.md` - 糟糕 comment 示例
+
+**注意：** 实际 review 时，规则从项目的 `AGENTS.md` 读取，而非 `architecture-rules-example.md`。
 
 ## License
 
