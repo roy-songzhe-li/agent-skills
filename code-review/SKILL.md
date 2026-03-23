@@ -128,6 +128,13 @@ For each issue, create a comment in this format:
 - "This is wrong..."
 - "Must change..."
 
+**Formatting Rules:**
+- ✅ Use English only
+- ✅ One sentence per comment
+- ✅ Use commas or periods (not dashes)
+- ❌ No em dashes (—) or en dashes (–)
+- ❌ No overly verbose explanations
+
 **Good Examples:**
 
 > **Security:** The `billingCheckoutSigningSecret` is optional in config. Consider making it required in staging/production to prevent the API from starting without proper security.
