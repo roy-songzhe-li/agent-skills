@@ -9,7 +9,7 @@
 - 追踪已处理的 comments（避免重复）
 - 使用 LLM 验证 comment 是否是真实问题
 - 自动生成并应用修复代码
-- 直接回复到原始 comment（quote reply）
+- 直接回复到原始 comment 下方（threaded reply，不是新建独立 comment）
 - 如果 comment 不 valid，礼貌地说明原因
 
 ## Requirements
@@ -50,7 +50,7 @@ bash address.sh aetheron/api 123
 3. **验证有效性** - 使用 LLM 判断 comment 是否是真实问题
 4. **生成修复** - 如果有效，生成代码修复方案
 5. **应用修复** - 执行代码更改并 commit
-6. **回复 comment** - 直接回复到原始 comment（quote reply）
+6. **回复 comment** - 直接回复到原始 comment 下方（形成对话线程）
 
 ## Comment 验证流程
 
@@ -146,7 +146,7 @@ gh api \
 ### 回复 Comment (Reply)
 
 ```bash
-# 直接回复到原始 comment（不是新建 comment）
+# 直接回复到原始 comment 下方（形成对话线程）
 gh api \
   --method POST \
   -H "Accept: application/vnd.github+json" \
@@ -154,7 +154,12 @@ gh api \
   -f body="Fixed in f2add5a: description of fix"
 ```
 
-**注意：** 这是 **reply to comment**，不是 post new comment。
+**重要：**
+- 使用 `/comments/{comment_id}/replies` endpoint
+- 回复会出现在原 comment 下方，形成对话线程
+- **不是**新建独立的 review comment
+- **不是**引用式回复（quote reply）
+- 就是简单的 threaded reply
 
 ### 查看已回复的 Comments
 

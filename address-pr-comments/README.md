@@ -21,7 +21,7 @@ bash address.sh owner/repo 123 --comment-id 456789
 - ✅ Track already addressed comments (avoid duplicates)
 - ✅ Verify if comment is a valid issue (LLM-powered)
 - ✅ Generate fix suggestions
-- ✅ Reply directly to original comment (quote reply)
+- ✅ Reply directly to original comment (threaded reply, not a new comment)
 - ✅ Polite responses for invalid comments
 - ✅ English-only, no dashes
 
