@@ -29,4 +29,4 @@ Agent Skills/
 
 **创建时间：** 2026-03-23  
 **管理者：** Roy Li  
-**GitHub：** (待创建)
+**GitHub：** https://github.com/roy-songzhe-li/agent-skills
