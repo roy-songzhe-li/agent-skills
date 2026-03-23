@@ -46,9 +46,10 @@ This is outside the scope of this PR. Perhaps we could address it in a follow-up
 
 ## Documentation
 
-- **[SKILL.md](SKILL.md)** - Complete skill guide
-- **[examples/fixed-replies.md](examples/fixed-replies.md)** - Examples of fixed comment replies
-- **[examples/invalid-replies.md](examples/invalid-replies.md)** - Examples of invalid comment replies
+- **[SKILL.md](SKILL.md)** - Complete skill guide (official format)
+- **[scripts/address.sh](scripts/address.sh)** - Main processing script
+- **[references/FIXED-REPLIES.md](references/FIXED-REPLIES.md)** - Examples of fixed comment replies
+- **[references/INVALID-REPLIES.md](references/INVALID-REPLIES.md)** - Examples of invalid comment replies
 
 ## Requirements
 

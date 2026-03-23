@@ -1,324 +1,167 @@
-# Address PR Comments Skill
+---
+name: address-pr-comments
+description: Automatically address and reply to PR review comments. Verifies if comments are valid issues, generates fixes, and replies directly to original comments. Uses LLM for validation and fix generation. Use when responding to PR feedback or addressing review comments.
+license: MIT
+compatibility: Requires gh CLI, git, and access to GitHub API
+metadata:
+  author: roy-songzhe-li
+  version: "1.0.0"
+  updated: "2026-03-23"
+---
 
-## Description
+# Address PR Comments
 
-自动化处理 PR review comments 的工具。验证 comment 是否有效，如果有效则生成修复方案并回复；如果无效则礼貌地说明原因。
+Automatically process PR review comments with AI-powered verification and fixes.
 
-**核心功能：**
-- 读取 PR 的所有 review comments
-- 追踪已处理的 comments（避免重复）
-- 使用 LLM 验证 comment 是否是真实问题
-- 自动生成并应用修复代码
-- 直接回复到原始 comment 下方（threaded reply，不是新建独立 comment）
-- 如果 comment 不 valid，礼貌地说明原因
-
-## Requirements
-
-- `gh` CLI (GitHub CLI) - 已安装并认证
-- `git` - 用于提交修复
-- OpenClaw 可访问的 LLM API（用于验证和生成修复）
-
-## Installation
+## Quick Start
 
 ```bash
-# 确保 gh 已安装并认证
-gh auth status
+# Address all comments in a PR
+scripts/address.sh owner/repo 123
 
-# 如果未认证
-gh auth login
+# Only process new comments (skip already replied)
+scripts/address.sh owner/repo 123 --new-only
 ```
 
-## Usage
+## What This Skill Does
 
-### 基本用法
+1. **Reads PR comments** - Fetches all review comments
+2. **Verifies validity** - Uses LLM to determine if comment is a real issue
+3. **Generates fix** - If valid, creates code fix suggestion
+4. **Applies fix** - Executes code changes and commits
+5. **Replies to comment** - Threaded reply under original comment
 
-```bash
-# 处理 PR 的所有 comments
-bash address.sh <owner/repo> <pr-number>
+## Features
 
-# 只处理新的 comments（跳过已回复的）
-bash address.sh <owner/repo> <pr-number> --new-only
+- ✅ LLM-powered comment validation
+- ✅ Automatic fix generation
+- ✅ Threaded replies (not new comments)
+- ✅ State tracking (avoids re-processing)
+- ✅ Two reply modes: Fixed / Invalid
+- ✅ English-only, no dashes
+- ✅ Polite, humble tone
 
-# 示例
-bash address.sh aetheron/api 123
-```
+## Reply Formats
 
-### Workflow
-
-1. **读取 comments** - 获取 PR 的所有 review comments
-2. **过滤已处理** - 跳过已经回复的 comments
-3. **验证有效性** - 使用 LLM 判断 comment 是否是真实问题
-4. **生成修复** - 如果有效，生成代码修复方案
-5. **应用修复** - 执行代码更改并 commit
-6. **回复 comment** - 直接回复到原始 comment 下方（形成对话线程）
-
-## Comment 验证流程
-
-对每个 comment，LLM 会判断：
-
-### ✅ Valid (需要修复)
-
-**条件：**
-- 确实是 bug 或可改进的地方
-- 在当前 PR 的 scope 内
-- 技术上可行且合理
-
-**行动：**
-1. 生成修复代码
-2. 应用修复
-3. Commit（格式：`Fixed in <commit>: <description>`）
-4. 回复 comment 并引用 commit hash
-
-### ❌ Invalid (不需要修复)
-
-**条件：**
-- Out of scope（不在当前 PR 范围内）
-- 已在其他地方处理
-- 不是真实问题（误判）
-- 需要更多讨论
-
-**行动：**
-1. 礼貌地说明原因
-2. 回复 comment 并解释
-
-## Reply 格式规范
-
-### Fixed Comment 格式
+### Fixed Comment
 
 ```
-Fixed in <commit-hash>: <one-sentence description of the fix>
+Fixed in f2add5a: findLambda now constructs the exact expected name instead of using includes().
 ```
 
-**示例：**
-```
-Fixed in f2add5a: findLambda now constructs the exact expected name (ac-staging-email-worker) instead of using includes().
-```
+**Format:** `Fixed in <hash>: <description>`
 
-**规则：**
-- ✅ 引用 commit hash
-- ✅ 简洁的一句话描述
-- ✅ 说明具体做了什么改动
-- ✅ 使用英文
-- ❌ 不使用破折号（em dash / en dash）
-- ❌ 不过于啰嗦
+**Rules:**
+- ✅ Include commit hash
+- ✅ One sentence description
+- ✅ Explain what changed
+- ✅ Use English
+- ❌ No dashes (em dash / en dash)
+- ❌ Not too verbose
 
-### Invalid Comment 格式
+### Invalid Comment
 
-**Out of Scope:**
 ```
 This is outside the scope of this PR. Perhaps we could address it in a follow-up?
 ```
 
-**Already Fixed:**
-```
-This was already addressed in commit abc123.
+**Rules:**
+- ✅ One sentence explanation
+- ✅ Polite, tentative language ("Perhaps", "Could", "Might")
+- ✅ Suggest alternatives if applicable
+- ✅ Use English
+- ❌ No dashes
+- ❌ Don't be dismissive
+
+## Validation Process
+
+For each comment, LLM determines:
+
+### ✅ Valid (Fix It)
+
+**Conditions:**
+- Actually a bug or improvement
+- Within PR scope
+- Technically feasible
+
+**Actions:**
+1. Generate fix code
+2. Apply changes
+3. Commit
+4. Reply: `Fixed in <hash>: <description>`
+
+### ❌ Invalid (Explain)
+
+**Conditions:**
+- Out of scope
+- Already handled
+- Not a real issue
+- Needs discussion
+
+**Actions:**
+1. Generate polite explanation
+2. Reply with reason
+
+## Common Invalid Reasons
+
+- `This is outside the scope of this PR. Perhaps we could address it in a follow-up?`
+- `This was already addressed in commit abc123.`
+- `The current implementation is intentional because [reason]. Could you clarify your concern?`
+- `Thanks for the suggestion. Could we discuss this further? I think [your perspective].`
+
+## Usage Examples
+
+### Process All Comments
+```bash
+scripts/address.sh myorg/myrepo 456
 ```
 
-**Not a Real Issue:**
-```
-The current implementation is intentional here because [reason]. Could you clarify your concern?
-```
-
-**Needs Discussion:**
-```
-Thanks for the suggestion. Could we discuss this further? I think [your perspective].
+### Only New Comments
+```bash
+scripts/address.sh myorg/myrepo 456 --new-only
 ```
 
-**规则：**
-- ✅ 一句话简短说明
-- ✅ 礼貌、谦虚的语气
-- ✅ 使用 "Perhaps", "Could", "Might" 等 tentative language
-- ✅ 使用英文
-- ❌ 不使用破折号
-- ❌ 不生硬拒绝
+### Specific Comment
+```bash
+scripts/address.sh myorg/myrepo 456 --comment-id 789012
+```
 
-## GitHub API 使用
+## Configuration
 
-### 读取 PR Comments
+Set environment variables:
 
 ```bash
-# 获取所有 review comments
-gh api \
-  -H "Accept: application/vnd.github+json" \
-  "/repos/${REPO}/pulls/${PR_NUMBER}/comments"
+export API_MODEL="anthropic/claude-sonnet-4-5"
+export API_BASE_URL="http://localhost:11434/v1"
+export API_KEY="your-api-key"
 ```
 
-### 回复 Comment (Reply)
+## State Tracking
 
-```bash
-# 直接回复到原始 comment 下方（形成对话线程）
-gh api \
-  --method POST \
-  -H "Accept: application/vnd.github+json" \
-  "/repos/${REPO}/pulls/${PR_NUMBER}/comments/${COMMENT_ID}/replies" \
-  -f body="Fixed in f2add5a: description of fix"
-```
+The script maintains `.addressed-comments.json` to avoid re-processing:
 
-**重要：**
-- 使用 `/comments/{comment_id}/replies` endpoint
-- 回复会出现在原 comment 下方，形成对话线程
-- **不是**新建独立的 review comment
-- **不是**引用式回复（quote reply）
-- 就是简单的 threaded reply
-
-### 查看已回复的 Comments
-
-```bash
-# 检查 comment 是否已有 replies
-gh api \
-  -H "Accept: application/vnd.github+json" \
-  "/repos/${REPO}/pulls/${PR_NUMBER}/comments/${COMMENT_ID}"
-```
-
-## 修复流程
-
-### 1. 分析 Comment
-
-使用 LLM 分析：
-- Comment 指出的问题是什么？
-- 在哪个文件的哪一行？
-- 是否是真实问题？
-- 是否在当前 PR 的 scope 内？
-
-### 2. 生成修复方案
-
-如果 valid，LLM 生成：
-- 需要修改的文件
-- 具体的代码更改
-- 修改的原因
-
-### 3. 应用修复
-
-```bash
-# 读取当前文件
-cat path/to/file.ts
-
-# 应用修复（可以用 edit 或重写文件）
-# ... 修改代码 ...
-
-# Commit
-git add path/to/file.ts
-git commit -m "Fix: description from comment"
-```
-
-### 4. 回复 Comment
-
-```bash
-COMMIT_HASH=$(git rev-parse --short HEAD)
-
-gh api \
-  --method POST \
-  -H "Accept: application/vnd.github+json" \
-  "/repos/${REPO}/pulls/${PR_NUMBER}/comments/${COMMENT_ID}/replies" \
-  -f body="Fixed in ${COMMIT_HASH}: description of fix"
-```
-
-## 追踪已处理的 Comments
-
-使用状态文件避免重复处理：
-
-```bash
-# 保存到 .addressed-comments.json
+```json
 {
   "pr_123": {
     "comment_456": {
       "status": "fixed",
       "commit": "f2add5a",
       "timestamp": "2026-03-23T19:00:00Z"
-    },
-    "comment_789": {
-      "status": "invalid",
-      "reason": "out of scope",
-      "timestamp": "2026-03-23T19:05:00Z"
     }
   }
 }
 ```
 
-## Advanced Usage
+## Reply Examples
 
-### 只处理特定 Comment
+See [references/FIXED-REPLIES.md](references/FIXED-REPLIES.md) for fixed comment examples.
 
-```bash
-# 处理单个 comment
-bash address.sh <owner/repo> <pr-number> --comment-id <comment-id>
-```
+See [references/INVALID-REPLIES.md](references/INVALID-REPLIES.md) for invalid comment reply examples.
 
-### 批量处理多个 PRs
+## Notes
 
-```bash
-# 处理所有 open PRs 的 comments
-gh pr list --repo <owner/repo> --json number --jq '.[].number' | while read pr; do
-  bash address.sh <owner/repo> $pr --new-only
-done
-```
-
-### 自定义 LLM 配置
-
-```bash
-# 使用不同的模型
-API_MODEL="gpt-4" bash address.sh <owner/repo> <pr-number>
-
-# 使用不同的 API endpoint
-API_BASE_URL="https://api.openai.com/v1" bash address.sh <owner/repo> <pr-number>
-```
-
-## Safety Features
-
-1. **Dry Run Mode** - 预览修复但不应用
-2. **Human Approval** - 对重大修改要求人工确认
-3. **Rollback** - 如果修复失败，自动回滚
-4. **State Tracking** - 记录所有处理过的 comments
-
-## Integration
-
-### CI/CD
-
-```yaml
-# .github/workflows/address-comments.yml
-name: Address PR Comments
-on:
-  pull_request_review_comment:
-    types: [created]
-
-jobs:
-  address:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Address Comment
-        run: bash address.sh ${{ github.repository }} ${{ github.event.pull_request.number }}
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-```
-
-### OpenClaw
-
-通过 agent 调用：
-
-```
-Address all comments in PR #123
-```
-
-## Tips
-
-1. **优先级排序：** 先处理 blocker 和 major issues
-2. **Context 感知：** 理解 comment 的上下文，避免误判
-3. **谦虚回复：** 即使 comment 无效，也要礼貌说明
-4. **引用 commit：** 修复后一定要引用 commit hash
-5. **避免破折号：** 使用逗号或句号分隔
-6. **全英文：** 所有回复使用英文
-
-## Files
-
-- `SKILL.md` - 本文档
-- `address.sh` - 主要处理脚本
-- `verify-prompt.txt` - 验证 comment 的 LLM prompt
-- `fix-prompt.txt` - 生成修复的 LLM prompt
-- `reply-templates.md` - 回复模板
-- `examples/fixed-replies.md` - Fixed comment 示例
-- `examples/invalid-replies.md` - Invalid comment 回复示例
-
-## License
-
-MIT
+- Uses GitHub `/comments/{comment_id}/replies` API
+- Replies appear under original comment (threaded)
+- NOT new standalone review comments
+- NOT quote-style replies
+- Tracks processed comments to avoid duplicates

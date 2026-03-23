@@ -86,10 +86,11 @@ EXISTING_COMMENTS=$(gh api "/repos/${REPO}/pulls/${PR_NUMBER}/comments" --jq '.[
 
 # Prepare prompt
 echo -e "${YELLOW}⟳ Preparing review prompt...${NC}"
-PROMPT_TEMPLATE="${SCRIPT_DIR}/review-prompt.txt"
+SKILL_ROOT="$(dirname "${SCRIPT_DIR}")"
+PROMPT_TEMPLATE="${SKILL_ROOT}/assets/review-prompt.txt"
 
 if [[ ! -f "${PROMPT_TEMPLATE}" ]]; then
-  echo -e "${RED}Error: review-prompt.txt not found${NC}"
+  echo -e "${RED}Error: assets/review-prompt.txt not found${NC}"
   exit 1
 fi
 

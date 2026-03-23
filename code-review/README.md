@@ -25,11 +25,12 @@ bash review.sh owner/repo 123 --dry-run
 
 ## Documentation
 
-- **[SKILL.md](SKILL.md)** - Complete skill guide
-- **[review-prompt.txt](review-prompt.txt)** - LLM prompt template
-- **[architecture-rules-example.md](architecture-rules-example.md)** - Example architecture rules (for reference)
-- **[examples/good-comments.md](examples/good-comments.md)** - Examples of excellent review comments
-- **[examples/bad-comments.md](examples/bad-comments.md)** - Examples of bad review comments to avoid
+- **[SKILL.md](SKILL.md)** - Complete skill guide (official format)
+- **[scripts/review.sh](scripts/review.sh)** - Main review script
+- **[assets/review-prompt.txt](assets/review-prompt.txt)** - LLM prompt template
+- **[references/ARCHITECTURE-RULES-EXAMPLE.md](references/ARCHITECTURE-RULES-EXAMPLE.md)** - Example architecture rules
+- **[references/GOOD-COMMENTS.md](references/GOOD-COMMENTS.md)** - Excellent review comment examples
+- **[references/BAD-COMMENTS.md](references/BAD-COMMENTS.md)** - Bad review comment examples (avoid)
 
 **Note:** The skill reads architecture rules from the project's `AGENTS.md` file, not from the example file.
 
