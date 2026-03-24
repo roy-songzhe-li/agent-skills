@@ -1,6 +1,6 @@
 ---
 name: agent-cube-auto
-description: Execute coding tasks using Agent Cube autonomous workflow. Two AI writers compete, three judges review, system picks winner or synthesizes best solution, creates PR automatically. Use when implementing features, refactoring code, or building production-ready solutions.
+description: Execute coding tasks using Agent Cube autonomous workflow. Two AI writers compete, three judges review, system picks winner or synthesizes best solution, creates PR automatically. ONLY use when user explicitly mentions "cube" or "agent cube" in their request (e.g., "用 cube 帮我做 XXX", "agent cube 实现 XXX").
 license: MIT
 compatibility: Requires cube CLI installed and cursor-agent authenticated
 metadata:
@@ -13,6 +13,21 @@ metadata:
 # Agent Cube Auto
 
 Execute coding tasks using Agent Cube's autonomous multi-agent workflow.
+
+## ⚠️ ACTIVATION REQUIREMENT
+
+**This skill is ONLY activated when the user explicitly mentions:**
+- "cube 帮我做 XXX"
+- "用 cube 实现 XXX"
+- "agent cube 完成 XXX"
+- "用 agent cube XXX"
+
+**Do NOT use this skill for general coding requests like:**
+- ❌ "帮我实现 XXX 功能"
+- ❌ "写一个 XXX"
+- ❌ "实现 XXX"
+
+**The user must explicitly invoke "cube" or "agent cube" to trigger this workflow.**
 
 ## What Agent Cube Does
 
