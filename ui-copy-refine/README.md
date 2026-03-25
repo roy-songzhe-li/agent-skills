@@ -12,11 +12,12 @@ Provide your current UI copy (buttons, labels, messages, etc.), and get:
 - Before/after comparison
 - Terminology consistency check
 
-## The 3 Review Principles
+## The 4 Review Principles
 
 1. **Remove Fillers** - Delete unnecessary adverbs, adjectives, interjections
 2. **Avoid Repetition** - Don't say the same thing twice
 3. **Lead with Benefits** - Put "why" before "how"
+4. **Check Terminology Consistency** - Ensure same terms for same concepts
 
 ## Example
 

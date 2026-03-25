@@ -1,10 +1,10 @@
 ---
 name: ui-copy-refine
-description: Review and refine existing UI copy using Apple WWDC principles. Analyze user-facing text to identify fillers, repetition, and unclear messaging, then suggest improvements. Use when reviewing buttons, labels, error messages, tooltips, notifications, or any existing UI text that needs optimization. Inspired by Apple UX Writing guidelines.
+description: Review and refine existing UI copy using Apple WWDC principles. Analyze user-facing text to identify fillers, repetition, unclear messaging, and terminology inconsistencies, then suggest improvements. Use when reviewing buttons, labels, error messages, tooltips, notifications, or any existing UI text. Checks consistency across provided text even without a formal word list. Inspired by Apple UX Writing guidelines.
 license: MIT
 metadata:
   author: roy-songzhe-li
-  version: "1.1.0"
+  version: "1.2.0"
   created: "2026-03-25"
   updated: "2026-03-25"
   based-on: WWDC25 - Enhance your app with great writing
@@ -28,7 +28,7 @@ When the user provides UI text (buttons, labels, messages, etc.), analyze it usi
 
 ---
 
-## The 3 Review Principles
+## The 4 Review Principles
 
 ### 1. Remove Fillers 🗑️
 
@@ -101,6 +101,53 @@ Put the "why" (benefit) before the "how" (action).
 
 ---
 
+### 4. Check Terminology Consistency 📋
+
+Ensure terms are used consistently across the UI.
+
+**What to check:**
+- Same action uses same verb (e.g., always "Delete", not mix "Delete"/"Remove"/"Erase")
+- Same concept uses same noun (e.g., always "Project", not mix "Project"/"Workspace")
+- Authentication terms consistent (e.g., "Sign in" everywhere, not "Log in" somewhere)
+
+**How to check:**
+
+If you know similar UI text from the same app, compare:
+- Does this button say "Delete" but another says "Remove"?
+- Does this page say "Username" but another says "User ID"?
+- Does this flow say "Sign in" but another says "Log in"?
+
+**Examples:**
+
+❌ **Inconsistent:**
+- Button A: "Remove project"
+- Button B: "Delete task"
+- Modal: "Are you sure you want to erase this file?"
+
+✅ **Consistent:**
+- Button A: "Delete project"
+- Button B: "Delete task"
+- Modal: "Delete this file?"
+
+❌ **Inconsistent:**
+- Header: "Log in"
+- Auth page: "Sign in to continue"
+- Settings: "You're signed in as..."
+
+✅ **Consistent:**
+- Header: "Sign in"
+- Auth page: "Sign in to continue"
+- Settings: "You're signed in as..."
+
+**If project has no established word list:**
+
+Look for patterns in the provided text:
+- If multiple pieces use "Sign in", flag any that say "Log in"
+- If multiple pieces use "Delete", flag any that say "Remove"
+- Recommend the most common term as the standard
+
+---
+
 ## Review Workflow
 
 When the user provides UI text to review, follow this process:
@@ -113,7 +160,7 @@ Read the provided text and flag problems:
 - 🚩 **Fillers**: Unnecessary adverbs, adjectives, interjections
 - 🚩 **Repetition**: Same information said differently
 - 🚩 **Unclear benefits**: Action without explaining "why"
-- 🚩 **Inconsistencies**: Different terms for the same thing
+- 🚩 **Terminology inconsistencies**: Different terms for the same thing
 
 **Mark problematic text:**
 ```markdown
@@ -122,7 +169,7 @@ Read the provided text and flag problems:
    ↳ Repetition: "click" + "button"
 ```
 
-### Step 2: Apply the 3 Principles
+### Step 2: Apply the 4 Principles
 
 For each flagged issue, apply improvements:
 
@@ -147,6 +194,15 @@ Improved: "Start your first project"
 Added: Specific benefit instead of generic "get started"
 ```
 
+**4. Check Terminology Consistency:**
+```markdown
+After Step 3: "Start your first project"
+
+Check: Does the app use "project" consistently?
+- If other places say "workspace" → Flag inconsistency
+- If everywhere says "project" → ✅ Consistent
+```
+
 ### Step 3: Present Comparison
 
 Show before/after in a clear table:
@@ -159,16 +215,35 @@ Show before/after in a clear table:
 | Notification | "Enable notifications to stay updated" | Benefit not prioritized | "Stay updated—enable notifications" | Benefit-first |
 ```
 
-### Step 4: Note Terminology Issues (if any)
+### Step 4: Summarize Terminology Consistency
 
-If you spot inconsistent terminology, flag it:
+After reviewing all provided text, note any inconsistencies:
 
 ```markdown
-⚠️ **Terminology Inconsistencies Detected:**
+⚠️ **Terminology Inconsistencies:**
 
-- "Log in" (header) vs "Sign in" (auth page) → Recommend: "Sign in" everywhere
-- "Remove" (menu) vs "Delete" (modal) → Recommend: "Delete" everywhere
-- "Workspace" (nav) vs "Project" (content) → Clarify: Are these the same thing?
+- "Log in" (button A) vs "Sign in" (button B)
+  → Recommend: Use "Sign in" everywhere (more common in provided text)
+
+- "Remove" (menu) vs "Delete" (modal)
+  → Recommend: Use "Delete" everywhere (clearer and standard)
+
+- "Workspace" (nav) vs "Project" (content)
+  → Clarify: Are these the same concept? If yes, use one term consistently.
+```
+
+**If only reviewing one piece of text:**
+
+Note what terms are used and flag potential conflicts:
+
+```markdown
+✅ **Terms Used:**
+- Action: "Delete"
+- Object: "Project"
+- Auth: "Sign in"
+
+💡 **Recommendation:** Check if these match other parts of the app. 
+If elsewhere uses "Remove", "Workspace", or "Log in", standardize to one term.
 ```
 
 ---
@@ -401,40 +476,121 @@ Use this when analyzing UI text:
 
 ---
 
-## Example: Full Page Optimization
+## Example: Multi-Component Review
 
-### Before
+### User Provides Multiple UI Texts
 
+**Button 1 (Homepage):**
 ```
-# Welcome to Our Amazing App!
-
-We're so excited to have you here! Our platform makes it super easy 
-to manage all your projects in one convenient place.
-
-Simply click the button below to quickly create your very first project 
-and get started on your journey with us!
-
-[Click Here to Get Started!]
-
-Already have an account? Simply click here to log in.
+"Simply click here to quickly and easily create your very first amazing project!"
 ```
 
-### After
-
+**Button 2 (Dashboard):**
 ```
-# Start your first project
-
-[Create project]
-
-Have an account? [Sign in]
+"Click here to remove your workspace"
 ```
 
-**Reductions:**
-- Words: 64 → 8 (87% reduction)
-- Fillers removed: "Amazing", "excited", "super easy", "convenient", "Simply" (x2), "quickly", "very", "journey with us"
-- Repetition removed: Entire first paragraph (adds no value)
-- Benefit implied: "Start your first project" (lead with action since benefit is obvious)
-- Terminology: "Sign in" (not "log in")
+**Button 3 (Settings):**
+```
+"Log in to continue"
+```
+
+**Error Message:**
+```
+"Oops! We're really sorry, but something went wrong. Please try again later."
+```
+
+---
+
+### Review Output
+
+#### Step 1: Issues Identified
+
+**Button 1:**
+- 🚩 Fillers: "Simply", "quickly", "easily", "very", "amazing"
+- 🚩 Repetition: "click here" (button is clickable)
+
+**Button 2:**
+- 🚩 Terminology: Uses "remove" and "workspace"
+
+**Button 3:**
+- 🚩 Terminology: Uses "Log in"
+
+**Error Message:**
+- 🚩 Fillers: "Oops!", "really", "Please"
+- 🚩 Over-apologetic: "We're sorry"
+- 🚩 Vague: "something went wrong"
+
+---
+
+#### Step 2: Apply 4 Principles
+
+**Button 1:**
+1. Remove Fillers: "Click here to create your first project"
+2. Avoid Repetition: "Create your first project"
+3. Lead with Benefits: "Start your first project"
+4. Check Terminology: Uses "project" ✅
+
+**Button 2:**
+1-3. Already concise
+4. Check Terminology: "remove" vs "delete"? "workspace" vs "project"? 🚩
+
+**Button 3:**
+1-3. Already concise
+4. Check Terminology: "Log in" vs "Sign in"? 🚩
+
+**Error Message:**
+1. Remove Fillers: "Something went wrong. Try again later."
+2. Avoid Repetition: ✅
+3. Lead with Benefits: "Try again later" (solution first)
+4. Check Terminology: ✅
+
+---
+
+#### Step 3: Before/After Comparison
+
+| Component | Original | Refined | Issues Fixed |
+|-----------|----------|---------|--------------|
+| Button 1 | "Simply click here to quickly and easily create your very first amazing project!" | "Start your first project" | Fillers, repetition |
+| Button 2 | "Click here to remove your workspace" | "Delete project" | Terminology |
+| Button 3 | "Log in to continue" | "Sign in to continue" | Terminology |
+| Error | "Oops! We're really sorry, but something went wrong. Please try again later." | "Something went wrong. Try again." | Fillers, clarity |
+
+---
+
+#### Step 4: Terminology Consistency
+
+⚠️ **Inconsistencies Detected:**
+
+1. **Delete vs Remove**
+   - Button 2 uses "remove"
+   - Recommend: Use "Delete" (more standard and clear)
+
+2. **Project vs Workspace**
+   - Button 1 uses "project"
+   - Button 2 uses "workspace"
+   - Question: Are these the same? If yes, standardize.
+   - Recommend: Use "Project" (matches Button 1)
+
+3. **Log in vs Sign in**
+   - Button 3 uses "Log in"
+   - Should match: "Sign in" (more modern and common)
+
+✅ **Terms Used Consistently:**
+- Error handling: Clear and actionable
+
+💡 **Recommendations:**
+- Standardize all delete actions to "Delete"
+- Use "Project" everywhere (not "Workspace")
+- Use "Sign in" everywhere (not "Log in")
+
+---
+
+**Summary:**
+- **Words reduced:** 48 → 19 (60% reduction)
+- **Clarity improved:** Removed fillers, fixed repetition
+- **Consistency improved:** Identified 3 terminology conflicts
+- **Action-oriented:** All buttons now lead with clear actions
 
 ---
 
