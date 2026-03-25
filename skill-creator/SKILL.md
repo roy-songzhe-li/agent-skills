@@ -4,9 +4,10 @@ description: Creates Agent Skills following the official agentskills.io specific
 license: MIT
 metadata:
   author: roy-songzhe-li
-  version: "2.0.0"
-  updated: "2026-03-23"
+  version: "2.1.0"
+  updated: "2026-03-26"
   spec-version: "1.0"
+  changelog: "Added security, testing, and best practices from community guidelines"
 ---
 
 # Skill Creator
