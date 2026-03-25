@@ -1,13 +1,13 @@
 ---
 name: skill-creator
-description: Creates Agent Skills following the official agentskills.io specification. Validates names and descriptions, generates proper directory structure with YAML frontmatter. Use when creating new skills, converting scripts into skills, or validating skill structure.
+description: Creates Agent Skills following the official agentskills.io specification. Validates names and descriptions, generates proper directory structure with YAML frontmatter. If user request is unclear, asks 1-3 clarifying questions to refine requirements before creation. Use when creating new skills, converting scripts into skills, or validating skill structure.
 license: MIT
 metadata:
   author: roy-songzhe-li
-  version: "2.1.0"
+  version: "2.2.0"
   updated: "2026-03-26"
   spec-version: "1.0"
-  changelog: "Added security, testing, and best practices from community guidelines"
+  changelog: "Added requirement clarification - asks brief questions when request unclear"
 ---
 
 # Skill Creator
@@ -774,3 +774,126 @@ clawhub update --all
 8. **Give info, not restrictions** - Let Claude adapt
 9. **Security first** - Prevent command injection
 10. **Test locally** - Before sharing
+
+---
+
+## 💬 Requirement Clarification
+
+**When user request is unclear, ask clarifying questions. Keep it brief.**
+
+### When to Ask
+
+Ask ONLY when:
+- ✅ Skill name is ambiguous (e.g., "data processor" - what kind of data?)
+- ✅ Use case is unclear (e.g., "API skill" - which API? what operations?)
+- ✅ Scope is too broad (e.g., "manage files" - specific operations needed?)
+- ✅ Missing critical info (e.g., no mention of input/output format)
+
+Don't ask when:
+- ❌ Request is already specific
+- ❌ Details can be inferred from context
+- ❌ Information is optional
+
+### How to Ask (Keep it Simple)
+
+**Ask 1-3 questions maximum. Be specific.**
+
+**❌ Bad (too many questions):**
+```
+What kind of data? What format? What operations? What output? 
+What dependencies? What error handling? What edge cases?
+```
+
+**✅ Good (focused):**
+```
+Quick questions:
+1. What kind of data? (JSON/CSV/PDF/other)
+2. Main operation? (parse/validate/transform/merge)
+```
+
+### Question Patterns
+
+**1. Clarify scope:**
+```
+"GitHub API skill" - unclear
+→ Ask: "Which GitHub operations? (e.g., issues, PRs, repos, actions)"
+```
+
+**2. Identify format:**
+```
+"Process documents" - unclear
+→ Ask: "What document types? (PDF/Word/Markdown/other)"
+```
+
+**3. Confirm use case:**
+```
+"Data analysis" - too broad
+→ Ask: "What data source? (CSV files/API/database)"
+```
+
+**4. Get specifics:**
+```
+"Automation skill" - vague
+→ Ask: "Automate what? (e.g., deployments, reports, tests)"
+```
+
+### Progressive Refinement
+
+**User says:** "Make a calendar skill"
+
+**You ask:** "Which calendar? (Google/Outlook/iCal/CLI)"
+
+**User says:** "Google Calendar"
+
+**You proceed:** Create `google-calendar` skill with gcalcli
+
+---
+
+**User says:** "Create a file manager"
+
+**You ask:** "Main operations needed? (create/delete/organize/search)"
+
+**User says:** "Mainly organize and search"
+
+**You proceed:** Create `file-organizer` skill focused on those operations
+
+---
+
+### Don't Over-Ask
+
+**Balance clarification with action:**
+- If 80% clear → make assumptions, note them, and proceed
+- If 50% clear → ask 1-2 key questions
+- If completely unclear → ask 2-3 specific questions
+
+**Example of good balance:**
+
+**User:** "Make a skill for APIs"
+
+**You:** "Which API? If you give me a specific API (e.g., GitHub, Stripe), I'll create a tailored skill. Or I can create a generic REST API helper."
+
+**Don't do:**
+```
+What API? What endpoints? What auth? What data format? 
+What error handling? What rate limits? What caching? 
+What logging? What monitoring? What testing?
+```
+
+### After Clarification
+
+Once clarified:
+1. Summarize understanding
+2. Proceed with skill creation
+3. Note any assumptions in the skill
+
+**Example:**
+
+**Summary:**
+```
+Creating `github-issues` skill:
+- Operations: list, view, create, close
+- Uses: gh CLI
+- Triggers: "check issue", "create issue"
+```
+
+**Proceed with creation.**
