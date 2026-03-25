@@ -1,17 +1,18 @@
 ---
 name: ui-copy-refine
-description: Refine UI copy and microcopy for web/mobile apps using Apple WWDC principles. Remove fillers, avoid repetition, lead with benefits, ensure terminology consistency. Use when optimizing buttons, labels, error messages, tooltips, notifications, onboarding flows, or any user-facing text. Inspired by Apple UX Writing guidelines.
+description: Review and refine existing UI copy using Apple WWDC principles. Analyze user-facing text to identify fillers, repetition, and unclear messaging, then suggest improvements. Use when reviewing buttons, labels, error messages, tooltips, notifications, or any existing UI text that needs optimization. Inspired by Apple UX Writing guidelines.
 license: MIT
 metadata:
   author: roy-songzhe-li
-  version: "1.0.0"
+  version: "1.1.0"
   created: "2026-03-25"
+  updated: "2026-03-25"
   based-on: WWDC25 - Enhance your app with great writing
 ---
 
 # UI Copy Refine
 
-Optimize user-facing text for clarity, conciseness, and impact using Apple WWDC UX writing principles.
+Review and optimize existing UI text for clarity, conciseness, and impact using Apple WWDC UX writing principles.
 
 ## ⚠️ Core Philosophy
 
@@ -19,9 +20,15 @@ Optimize user-facing text for clarity, conciseness, and impact using Apple WWDC 
 
 UX writing is about **economy of language**. Apps have no minimum word count—usually, you should *remove* words, not add them.
 
+## Primary Use Case
+
+**This skill is for REVIEWING and IMPROVING existing UI copy, not writing from scratch.**
+
+When the user provides UI text (buttons, labels, messages, etc.), analyze it using the 3 principles below and suggest improvements.
+
 ---
 
-## The 4 Principles
+## The 3 Review Principles
 
 ### 1. Remove Fillers 🗑️
 
@@ -94,122 +101,74 @@ Put the "why" (benefit) before the "how" (action).
 
 ---
 
-### 4. Build a Word List 📋
+## Review Workflow
 
-Maintain terminology consistency across your app.
+When the user provides UI text to review, follow this process:
 
-**Create a simple table:**
+### Step 1: Identify Issues
 
-| Use | Avoid | Definition |
-|-----|-------|------------|
-| Sign in | Log in, Login | Authenticate into account |
-| Username | Handle, Alias | User's unique identifier |
-| Delete | Remove, Erase | Permanently remove item |
+Read the provided text and flag problems:
 
-**Example consistency:**
-
-✅ Settings: "Choose your **username**"  
-✅ Help text: "Your **username** is visible to others"  
-✅ Error: "**Username** already taken"  
-✅ Notification: "A user with the **username** [name] followed you"
-
-**Tips:**
-- Start small (5-10 terms)
-- Add new terms as you encounter inconsistencies
-- Share with your team
-- Update regularly
-
----
-
-## Step-by-Step Workflow
-
-### Step 1: Gather UI Text
-
-Collect all user-facing text from your app:
-- Button labels
-- Form field labels and placeholders
-- Error messages
-- Success messages
-- Tooltips and hints
-- Notifications
-- Onboarding screens
-- Empty states
-- Loading states
-
-**Output format:**
-```markdown
-## Component: [Name]
-
-**Original:**
-[Current text]
-
-**Context:**
-[Where it appears, what triggers it]
-```
-
-### Step 2: Read Aloud Test
-
-Read each piece of text out loud. This helps identify:
-- Awkward phrasing
-- Filler words
-- Repetition
-- Unnatural language
+**Check for:**
+- 🚩 **Fillers**: Unnecessary adverbs, adjectives, interjections
+- 🚩 **Repetition**: Same information said differently
+- 🚩 **Unclear benefits**: Action without explaining "why"
+- 🚩 **Inconsistencies**: Different terms for the same thing
 
 **Mark problematic text:**
 ```markdown
 🚩 "Simply click the button below to quickly get started with our amazing app!"
+   ↳ Fillers: "Simply", "quickly", "amazing"
+   ↳ Repetition: "click" + "button"
 ```
 
-### Step 3: Apply the 4 Principles
+### Step 2: Apply the 3 Principles
 
-For each text piece, apply principles in order:
+For each flagged issue, apply improvements:
 
 **1. Remove Fillers:**
 ```markdown
 Original: "Simply click the button below to quickly get started"
 After: "Click the button below to get started"
+Removed: "Simply", "quickly"
 ```
 
 **2. Avoid Repetition:**
 ```markdown
 After Step 1: "Click the button below to get started"
-After Step 2: "Get started" (if button is already below)
+After Step 2: "Get started"
+Removed: "Click the button below" (redundant for a button)
 ```
 
 **3. Lead with Benefits:**
 ```markdown
 After Step 2: "Get started"
-After Step 3: "Start building your first project—click below"
+Improved: "Start your first project"
+Added: Specific benefit instead of generic "get started"
 ```
 
-**4. Check Word List:**
+### Step 3: Present Comparison
+
+Show before/after in a clear table:
+
 ```markdown
-After Step 3: "Start building your first project—click below"
-After Step 4: "Start your first project" (consistent with "project" terminology)
+| Component | Original | Issues | Refined | Improvement |
+|-----------|----------|--------|---------|-------------|
+| CTA Button | "Simply click here to get started" | Fillers, repetition | "Get started" | 71% shorter, clearer |
+| Error | "Oops! Something went wrong. Please try again." | Fillers | "Something went wrong. Try again." | 33% shorter |
+| Notification | "Enable notifications to stay updated" | Benefit not prioritized | "Stay updated—enable notifications" | Benefit-first |
 ```
 
-### Step 4: Generate Refined Copy
+### Step 4: Note Terminology Issues (if any)
 
-Create a comparison table:
-
-```markdown
-| Component | Original | Refined | Principle Applied |
-|-----------|----------|---------|-------------------|
-| CTA Button | "Simply click here to get started" | "Get started" | Remove fillers, avoid repetition |
-| Error Message | "Oops! Something went wrong. Please try again." | "Something went wrong. Try again." | Remove fillers |
-| Notification | "Enable notifications to stay updated" | "Stay updated—enable notifications" | Lead with benefit |
-```
-
-### Step 5: Build Word List
-
-Extract inconsistent terms and create your word list:
+If you spot inconsistent terminology, flag it:
 
 ```markdown
-| Use | Avoid | Definition | Used In |
-|-----|-------|------------|---------|
-| Project | Workspace, Space | User's work container | Dashboard, Settings, Docs |
-| Delete | Remove, Trash | Permanently remove | Modals, Menus |
-| Sign in | Log in, Login | Authenticate | Header, Auth pages |
+⚠️ **Terminology Inconsistencies Detected:**
+
+- "Log in" (header) vs "Sign in" (auth page) → Recommend: "Sign in" everywhere
+- "Remove" (menu) vs "Delete" (modal) → Recommend: "Delete" everywhere
+- "Workspace" (nav) vs "Project" (content) → Clarify: Are these the same thing?
 ```
 
 ---
@@ -392,9 +351,9 @@ Write copy that translates well:
 
 ---
 
-## Checklist
+## Review Checklist
 
-Use this before finalizing UI copy:
+Use this when analyzing UI text:
 
 ### Content
 - [ ] Every word adds value (no fillers)
@@ -425,7 +384,6 @@ Use this before finalizing UI copy:
 ## Resources
 
 - **Original Tutorial:** [references/WWDC-TUTORIAL.md](references/WWDC-TUTORIAL.md)
-- **Word List Template:** [assets/word-list-template.md](assets/word-list-template.md)
 - **Common Patterns:** [references/UI-COPY-PATTERNS.md](references/UI-COPY-PATTERNS.md)
 - **Apple Style Guide:** https://support.apple.com/guide/applestyleguide/
 - **Apple HIG:** https://developer.apple.com/design/human-interface-guidelines/

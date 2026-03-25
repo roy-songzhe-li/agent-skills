@@ -1,15 +1,22 @@
 # ui-copy-refine
 
-Optimize UI copy for clarity, conciseness, and impact using Apple WWDC UX writing principles.
+Review and refine existing UI copy using Apple WWDC UX writing principles.
 
-## Quick Start
+## Purpose
 
-**The 4 Principles:**
+**This skill is for REVIEWING existing UI text, not writing from scratch.**
+
+Provide your current UI copy (buttons, labels, messages, etc.), and get:
+- Issue identification (fillers, repetition, unclear benefits)
+- Optimized suggestions
+- Before/after comparison
+- Terminology consistency check
+
+## The 3 Review Principles
 
 1. **Remove Fillers** - Delete unnecessary adverbs, adjectives, interjections
 2. **Avoid Repetition** - Don't say the same thing twice
 3. **Lead with Benefits** - Put "why" before "how"
-4. **Build Word List** - Maintain terminology consistency
 
 ## Example
 
@@ -27,10 +34,9 @@ Get started
 
 ## Files
 
-- **[SKILL.md](SKILL.md)** - Complete guide with examples and checklist
+- **[SKILL.md](SKILL.md)** - Complete review workflow and principles
 - **[references/WWDC-TUTORIAL.md](references/WWDC-TUTORIAL.md)** - Original Apple WWDC tutorial
 - **[references/UI-COPY-PATTERNS.md](references/UI-COPY-PATTERNS.md)** - Common UI patterns and examples
-- **[assets/word-list-template.md](assets/word-list-template.md)** - Template for terminology consistency
 
 ## Core Philosophy
 
@@ -38,16 +44,17 @@ Get started
 
 UX writing is about **economy of language**. Usually, you should *remove* words, not add them.
 
-## Common Use Cases
+## What to Review
 
-- Button labels
-- Error messages
-- Success messages
-- Tooltips
-- Notifications
-- Onboarding flows
-- Empty states
-- Form fields
+Provide any UI text:
+- Button labels ("Click here to submit your application")
+- Error messages ("Oops! Something went wrong!")
+- Success messages ("Your changes have been saved successfully!")
+- Tooltips ("Click this button to save")
+- Notifications ("You have received a new message")
+- Onboarding text ("Welcome! We're excited to have you!")
+- Empty states ("You don't have any items yet")
+- Form fields ("Please enter your email address")
 
 ## Resources
 
