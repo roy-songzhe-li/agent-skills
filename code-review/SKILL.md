@@ -13,14 +13,48 @@ metadata:
 
 Perform automated PR code review following project-specific architecture rules.
 
+## ⚠️ CRITICAL: PR Verification (MANDATORY FIRST STEP)
+
+**Before doing ANYTHING else, you MUST verify the PR:**
+
+```bash
+# Get PR title and description to confirm you have the right PR
+gh pr view <PR_NUMBER> --repo <OWNER/REPO> --json title,body,author
+```
+
+**Check the output:**
+1. ✅ Does the title match what you expect?
+2. ✅ Does the description make sense for the review request?
+3. ✅ Is this the correct PR number?
+
+**If ANY of these fail, STOP and ask for clarification.**
+
+**Why this matters:**
+- Prevents reviewing the wrong PR
+- Prevents generating irrelevant comments
+- Ensures you understand what the PR is trying to accomplish
+
+**Example:**
+```bash
+gh pr view 693 --repo aetheronhq/aetheron-connect-v2 --json title,body,author
+
+# Expected output (example):
+# {
+#   "title": "fix: resolve SonarCloud cognitive complexity issues",
+#   "body": "## Summary\nFixes 3 SonarCloud issues...",
+#   "author": {"login": "EllaLiu0401"}
+# }
+```
+
 ## Process Overview
 
-1. Fetch PR diff from GitHub
-2. Read project architecture rules (AGENTS.md)
-3. Check existing review comments
-4. Analyze code with LLM
-5. Post inline comments
-6. Submit review status
+1. **[MANDATORY]** Verify PR identity (title, description, author)
+2. Fetch PR diff from GitHub
+3. Read project architecture rules (AGENTS.md)
+4. Check existing review comments
+5. Analyze code with LLM
+6. Post inline comments
+7. Submit review status
 
 ## Step 1: Fetch PR Diff
 
