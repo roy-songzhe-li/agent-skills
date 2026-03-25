@@ -32,6 +32,22 @@
 
 ---
 
+## ⚠️ 消息发送规范
+
+**所有发送到 Slack 的消息必须使用英文：**
+- **Concise** - 简洁明了
+- **Clear** - 表达清晰
+- **Easy** - 易于理解
+- **Friendly** - 友好专业
+
+**示例：**
+✅ "PR ready for review. All tests passed ✅"  
+✅ "Meeting rescheduled to 2pm. See you there!"  
+❌ "我已经完成了代码审查"（不要用中文）  
+❌ "The aforementioned pull request has been meticulously reviewed..."（太复杂）
+
+---
+
 ## 🚀 快速开始
 
 ### 列出所有频道
@@ -51,7 +67,8 @@ bash ~/Desktop/CognitiveCreators/Agent\ Skills/slack-api-helper/slack-search.sh 
 
 ### 发送 DM 给自己
 ```bash
-bash ~/Desktop/CognitiveCreators/Agent\ Skills/slack-api-helper/slack-send.sh U08MNQZGHBP "测试消息"
+# ⚠️ 必须使用英文（concise, clear, easy, friendly）
+bash ~/Desktop/CognitiveCreators/Agent\ Skills/slack-api-helper/slack-send.sh U08MNQZGHBP "Test message. All systems go ✅"
 ```
 
 ---
@@ -88,13 +105,32 @@ bash ~/Desktop/CognitiveCreators/Agent\ Skills/slack-api-helper/slack-send.sh U0
 
 在 OpenClaw Agent 中调用：
 
+**⚠️ 发送消息时必须使用英文（concise, clear, easy, friendly）**
+
 ```javascript
 // 读取消息
 const messages = await exec('bash ~/Desktop/CognitiveCreators/Agent\\ Skills/slack-api-helper/slack-read.sh C079AKFJLTX 20');
 
-// 发送消息
-await exec('bash ~/Desktop/CognitiveCreators/Agent\\ Skills/slack-api-helper/slack-send.sh U08MNQZGHBP "AI 助手回复"');
+// 发送消息（英文，简洁友好）
+await exec('bash ~/Desktop/CognitiveCreators/Agent\\ Skills/slack-api-helper/slack-send.sh U08MNQZGHBP "Task completed. Everything looks good ✅"');
 ```
+
+### 推荐消息风格
+
+**状态更新：**
+- "Build finished. Ready to deploy 🚀"
+- "Tests passed. No issues found ✅"
+- "PR merged. Thanks for the review!"
+
+**提醒通知：**
+- "Meeting in 10 minutes. See you there!"
+- "Review needed for PR #456"
+- "Don't forget to update the docs 📝"
+
+**回复确认：**
+- "Got it. Will handle this today."
+- "Thanks! This helps a lot 🙏"
+- "Updated. Please check again."
 
 ---
 

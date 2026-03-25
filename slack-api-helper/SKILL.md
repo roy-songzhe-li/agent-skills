@@ -29,6 +29,36 @@
 - 编辑/删除消息
 - 上传文件
 
+### ⚠️ **消息发送规范（强制）**
+
+**所有发送到 Slack 的消息必须使用英文，并遵循以下原则：**
+
+1. **Concise** - 简洁明了，避免冗长
+2. **Clear** - 表达清晰，不产生歧义
+3. **Easy** - 易于理解，避免复杂句式
+4. **Friendly** - 友好语气，保持专业但不生硬
+
+**✅ 好的示例：**
+```
+"PR #123 is ready for review. I've addressed all comments."
+"Meeting rescheduled to 2pm today. See you there!"
+"Thanks for the feedback! I'll update the docs."
+```
+
+**❌ 错误示例：**
+```
+"我已经完成了代码审查"  # 不要用中文
+"The aforementioned pull request has been meticulously reviewed..." # 太复杂
+"yo check this" # 太随意
+```
+
+**格式建议：**
+- 使用简单现在时或现在完成时
+- 避免被动语态（除非必要）
+- 使用常见词汇，避免生僻词
+- 保持专业但友好的语气
+- 可以使用 emoji 增强表达 ✅ 🎉 👍
+
 ---
 
 ## 配置
@@ -81,22 +111,26 @@ curl -s -H "Authorization: Bearer $SLACK_TOKEN" \
 
 ### 4. 发送 DM
 
+**⚠️ 必须使用英文：concise, clear, easy, friendly**
+
 ```bash
 USER_ID="U08MNQZGHBP"  # Roy
 curl -X POST -H "Authorization: Bearer $SLACK_TOKEN" \
   -H "Content-Type: application/json" \
   'https://slack.com/api/chat.postMessage' \
-  -d "{\"channel\":\"$USER_ID\",\"text\":\"Hello from API\"}"
+  -d "{\"channel\":\"$USER_ID\",\"text\":\"PR ready for review. All tests passed ✅\"}"
 ```
 
 ### 5. 发送到频道
+
+**⚠️ 必须使用英文：concise, clear, easy, friendly**
 
 ```bash
 CHANNEL_ID="C079AKFJLTX"  # #dev
 curl -X POST -H "Authorization: Bearer $SLACK_TOKEN" \
   -H "Content-Type: application/json" \
   'https://slack.com/api/chat.postMessage' \
-  -d "{\"channel\":\"$CHANNEL_ID\",\"text\":\"Message from bot\"}"
+  -d "{\"channel\":\"$CHANNEL_ID\",\"text\":\"Deployment complete. New features are live 🚀\"}"
 ```
 
 ### 6. 添加 emoji 反应
@@ -115,6 +149,8 @@ curl -X POST -H "Authorization: Bearer $SLACK_TOKEN" \
 
 ### 在 Agent 中调用
 
+**⚠️ 重要：发送消息时必须使用英文（concise, clear, easy, friendly）**
+
 ```javascript
 // 读取 #dev 频道消息
 const token = await exec('cat ~/.openclaw/secrets/slack-token');
@@ -123,13 +159,36 @@ const messages = await exec(`
     'https://slack.com/api/conversations.history?channel=C079AKFJLTX&limit=20'
 `);
 
-// 发送消息
+// 发送消息（英文，简洁友好）
 await exec(`
   curl -X POST -H "Authorization: Bearer ${token}" \
     -H "Content-Type: application/json" \
     'https://slack.com/api/chat.postMessage' \
-    -d '{"channel":"U08MNQZGHBP","text":"AI 助手回复"}'
+    -d '{"channel":"U08MNQZGHBP","text":"Task completed. All checks passed ✅"}'
 `);
+```
+
+### 消息示例（推荐风格）
+
+**状态更新：**
+```
+"Build finished. Ready to deploy 🚀"
+"Tests passed. No issues found ✅"
+"PR merged. Thanks for the review!"
+```
+
+**提醒/通知：**
+```
+"Meeting in 10 minutes. See you there!"
+"Don't forget to update the docs 📝"
+"Review needed for PR #456"
+```
+
+**回复/确认：**
+```
+"Got it. Will handle this today."
+"Thanks! This helps a lot 🙏"
+"Updated. Please check again."
 ```
 
 ### 快捷脚本
