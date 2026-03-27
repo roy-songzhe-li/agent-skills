@@ -97,7 +97,47 @@ Save the list of existing comment bodies to filter duplicates later.
 
 ## Step 4: Analyze Code with LLM
 
-Review the diff against architecture rules. Look for:
+Review the diff against architecture rules. **Focus on behavioral impact, not just code correctness.**
+
+### 🎯 CRITICAL: Behavioral Impact Analysis (MANDATORY)
+
+**Before analyzing code correctness, ask:**
+
+1. **"What changes for the end user?"**
+   - Does this affect existing customer integrations?
+   - Will current API consumers see different behavior?
+   - Does this break backward compatibility?
+
+2. **"What are the downstream effects?"**
+   - Does removing this code path affect production workloads?
+   - Are there side effects on other systems?
+   - Will this change runtime behavior?
+
+3. **"Is this a behavior change disguised as a refactor?"**
+   - Removing "dead code" that might not be dead
+   - Changing default values or fallbacks
+   - Modifying error handling paths
+
+**Example of missed behavioral impact:**
+```diff
+- if (isFullDocument) {
+-   // Apply full layout
+- } else {
+-   // Apply content-only layout
+- }
++ // Always apply full layout
+```
+
+**Code is correct** ✅ (removed dead branch)  
+**Behavioral impact** ⚠️ (customers expecting content-only layout now get full layout)
+
+**The PR passed review because the code was logically sound, but failed to assess the behavioral change on existing integrations.**
+
+---
+
+### Code Correctness Issues
+
+After assessing behavioral impact, review for:
 
 **Security Issues (🔴 Blocker):**
 - Authentication/authorization bypasses
@@ -117,6 +157,12 @@ Review the diff against architecture rules. Look for:
 - Off-by-one errors
 - Unhandled error cases
 
+**Behavioral Changes (🟠 Major):**
+- Breaking changes to public APIs
+- Changed default values affecting existing users
+- Removed code paths still in use
+- Modified error handling affecting integrations
+
 **Code Quality (🟡 Minor):**
 - Code duplication (DRY violations)
 - Poor naming
@@ -128,6 +174,7 @@ Review the diff against architecture rules. Look for:
 - Edge cases not covered (null, empty, invalid)
 - Error paths not tested
 - Missing integration tests
+- **Behavioral changes without validation tests**
 
 ## Step 5: Generate Review Comments
 
@@ -142,6 +189,7 @@ For each issue, create a comment in this format:
 - `Security:`
 - `Architecture:`
 - `Potential Bug:`
+- `Behavioral Impact:` ⚠️ **NEW - Use for changes affecting end users or integrations**
 - `DRY:`
 - `Type Safety:`
 - `Performance:`
@@ -172,6 +220,10 @@ For each issue, create a comment in this format:
 **Good Examples:**
 
 > **Security:** The `billingCheckoutSigningSecret` is optional in config. Consider making it required in staging/production to prevent the API from starting without proper security.
+
+> **Behavioral Impact:** Removing `isFullDocument` changes the layout for existing customer integrations. Perhaps we could validate this doesn't break current email templates before merging?
+
+> **Behavioral Impact:** This changes the default error response from 400 to 500 for validation failures. Would it make sense to preserve the 400 status code for backward compatibility?
 
 > **DRY:** Since `process()` throws on failure, `processed` is always `true`. Perhaps we could simplify the interface?
 
@@ -223,12 +275,14 @@ Based on issue severity:
 
 **Status Mapping:**
 ```
-🔴 Blocker issues → REQUEST_CHANGES
-🟠 Major issues only → COMMENT
-🟡 Minor issues only → APPROVE (with comments)
+🔴 Blocker issues (Security, Critical Bugs) → REQUEST_CHANGES
+🟠 Major issues (Architecture, Behavioral Impact, Bugs) → COMMENT
+🟡 Minor issues (Code Quality, Test Gaps) → APPROVE (with comments)
 ⚪ Nitpicks only → APPROVE
 No issues → APPROVE with "LGTM! 🚀"
 ```
+
+**Note:** Behavioral Impact issues are considered **Major (🟠)** because they affect production users, even if the code is technically correct.
 
 ## Complete Example
 
